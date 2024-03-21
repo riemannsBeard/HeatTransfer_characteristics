@@ -68,7 +68,7 @@ eps =  [0.25 0.3  0.35 0.4  0.5 ]
 gamma =  [0.0004 0.0005 0.0007 0.0008 0.0013]'''
 
 
-LL = [1000, 100, 10, 1]
+LL = [1, 10, 100, 1000]
 BB = [1e-3, 1e-2, 0.1]
 
 xi = 0.0013
@@ -77,7 +77,7 @@ eps = 0.5
 
 # Heat source
 Delta = 0.5
-x0 = 0.8
+x0 = 0.25
 delta = 0.005
 
 
@@ -167,13 +167,12 @@ for Lambda in LL:
         AA = sp.sparse.block_diag((sp.sparse.linalg.inv(A), sp.sparse.linalg.inv(As)))
         
         
+        Q = (np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
+             np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
+             np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
         
-        # Q = (np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
-        #     np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.5)**2)/np.sqrt(np.pi*delta) +
-        #     np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.2)**2)/np.sqrt(np.pi*delta))/3
-        
-        Q = np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] -
-                                                x0)**2)/np.sqrt(np.pi*delta)
+#         Q = np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] -
+#                                                 x0)**2)/np.sqrt(np.pi*delta)
         
         
         # PLOT
@@ -376,8 +375,13 @@ for Lambda in LL:
         Ainv = np.linalg.inv(A)
         
         # Heat source with characteristics discretization
-        Qc = np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta)
-        
+#         Qc = np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta)
+
+        Qc = (np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
+              np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
+              np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
+
+
         # Numerical solution
         Cp, Cn, Tfc, Tsc = compute_values(tc, xc, Tfc, Tsc, Qc, Ainv,
                                           Lambda, Lambdas, gamma, dtc)
