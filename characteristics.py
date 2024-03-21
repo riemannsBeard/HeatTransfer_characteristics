@@ -77,7 +77,7 @@ eps = 0.5
 
 # Heat source
 Delta = 0.5
-x0 = 0.25
+x0 = 0.75
 delta = 0.005
 
 
@@ -167,12 +167,12 @@ for Lambda in LL:
         AA = sp.sparse.block_diag((sp.sparse.linalg.inv(A), sp.sparse.linalg.inv(As)))
         
         
-        Q = (np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
-             np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
-             np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
+        # Q = (np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
+        #      np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
+        #      np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
         
-#         Q = np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] -
-#                                                 x0)**2)/np.sqrt(np.pi*delta)
+        Q = np.tanh(t/Delta)*np.exp(-(1/delta)*(x[:,np.newaxis] -
+                                                x0)**2)/np.sqrt(np.pi*delta)
         
         
         # PLOT
@@ -375,11 +375,11 @@ for Lambda in LL:
         Ainv = np.linalg.inv(A)
         
         # Heat source with characteristics discretization
-#         Qc = np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta)
+        Qc = np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta)
 
-        Qc = (np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
-              np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
-              np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
+        # Qc = (np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - x0)**2)/np.sqrt(np.pi*delta) +
+        #       np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.50)**2)/np.sqrt(np.pi*delta) +
+        #       np.tanh(tc/Delta)*np.exp(-(1/delta)*(xc[:,np.newaxis] - 0.75)**2)/np.sqrt(np.pi*delta))/3
 
 
         # Numerical solution
