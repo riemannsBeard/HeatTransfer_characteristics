@@ -69,7 +69,7 @@ gamma =  [0.0004 0.0005 0.0007 0.0008 0.0013]'''
 
 
 LL = [1, 10, 100, 1000]
-BB = [1e-3, 1e-2, 0.1]
+BB = [1e-8, 1e-6, 1e-4]
 
 xi = 0.0013
 kappa = 235.0374
@@ -77,7 +77,7 @@ eps = 0.5
 
 # Heat source
 Delta = 0.5
-x0 = 0.75
+x0 = 0.5
 delta = 0.005
 
 
@@ -94,8 +94,8 @@ for Lambda in LL:
         
         print('Lambda = ', np.round(Lambda, 4))
         print('Lambdas = ', np.round(Lambdas, 4))
-        print('beta = ', np.round(beta, 4))
-        print('betas = ', np.round(betas, 4))
+        print('beta = ', np.format_float_scientific(beta, precision=2))
+        print('betas = ', np.format_float_scientific(betas, precision=2))
         print('gamma = ', np.round(gamma, 4))
         
         #%% DNS simulation
@@ -187,9 +187,10 @@ for Lambda in LL:
         ax.set_xlabel(r'$\eta$', fontsize=16)
         ax.set_ylabel(r'$\tau$', fontsize=16)
         
-        fig.savefig('./figs/q_vs_tau_vs_eta' + str(np.round(Lambda, 2))
-                    + '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
-                    str(np.round(beta, 4)) + '_betas_' + str(np.round(betas, 4)) +
+        fig.savefig('./figs/q_vs_tau_vs_eta' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) + '_betas_' +
+                    str(np.format_float_scientific(betas, precision=2)) +
                     '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
                     '.pdf', bbox_inches='tight')
         
@@ -218,6 +219,9 @@ for Lambda in LL:
         thetas = Ts
         #
         
+        d2Tf_dx, d2Ts_dx = np.gradient(np.gradient(Tf, x, axis=0), x, axis=0),\
+                            np.gradient(np.gradient(Ts, x, axis=0), x, axis=0)
+      
         
         #
         # PLOT
@@ -244,9 +248,44 @@ for Lambda in LL:
         ax2.set_ylabel(r'$\tau$', fontsize=16)
         ax2.set_xlim([0, 1])
         
-        fig.savefig('./figs/DNS_T_vs_x_vs_t_Lambda_' + str(np.round(Lambda, 2))
-                    + '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
-                    str(np.round(beta, 4)) + '_betas_' + str(np.round(betas, 4)) +
+        fig.savefig('./figs/DNS_T_vs_x_vs_t_Lambda_' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) + '_betas_' +
+                    str(np.format_float_scientific(betas, precision=2)) +
+                    '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
+                    '.pdf', bbox_inches='tight')
+        plt.show()
+        
+        
+        #
+        # PLOT
+        #
+        fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(7*cm,11*cm), sharex='row')
+        (ax1, ax2) = axs
+        
+        cs1 = ax1.contourf(x, t, d2Tf_dx.T, 16)
+        for c in cs1.collections:
+            c.set_rasterized(True)
+            
+        plt.tight_layout()
+        cbar1 = plt.colorbar(cs1)
+        cbar1.set_label(r'$\partial^2{\theta}/\partial{\eta}^2$', fontsize=16)
+        ax1.set_ylabel(r'$\tau$', fontsize=16)
+        
+        cs2 = ax2.contourf(x, t, d2Ts_dx.T, 16)
+        for c in cs2.collections:
+            c.set_rasterized(True)
+            
+        cbar2 = plt.colorbar(cs2)
+        cbar2.set_label(r'$\partial^2{\theta_s}/\partial{\eta}^2$', fontsize=16)
+        ax2.set_xlabel(r'$\eta$', fontsize=16)
+        ax2.set_ylabel(r'$\tau$', fontsize=16)
+        ax2.set_xlim([0, 1])
+        
+        fig.savefig('./figs/DNS_d2Tdx_vs_x_vs_t_Lambda_' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) + '_betas_' +
+                    str(np.format_float_scientific(betas, precision=2)) +
                     '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
                     '.pdf', bbox_inches='tight')
         plt.show()
@@ -332,9 +371,10 @@ for Lambda in LL:
         # ax2.set_box_aspect(0.8)
         ax2.set_xlabel(r'$\eta$', fontsize=16)
         
-        fig.savefig('./figs/DNS_T_vs_x_vs_t_subplot_Lambda_' + str(np.round(Lambda, 2))
-                    + '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
-                    str(np.round(beta, 4)) + '_betas_' + str(np.round(betas, 4)) +
+        fig.savefig('./figs/DNS_T_vs_x_vs_t_subplot_Lambda_' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) +
+                    '_betas_' + str(np.format_float_scientific(betas, precision=2)) +
                     '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
                     '.pdf', bbox_inches='tight')
         
@@ -417,9 +457,10 @@ for Lambda in LL:
         #ax2.set_ylim([0, 1])
         ax2.set_xlabel(r'$\eta$', fontsize=16)
         
-        fig.savefig('./figs/char_T_vs_x_vs_t_Lambda_' + str(np.round(Lambda, 2))
-                    + '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
-                    str(np.round(beta, 4)) + '_betas_' + str(np.round(betas, 4)) +
+        fig.savefig('./figs/char_T_vs_x_vs_t_Lambda_' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) +
+                    '_betas_' + str(np.format_float_scientific(betas, precision=2)) +
                     '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
                     '.pdf', bbox_inches='tight')
         
@@ -538,9 +579,10 @@ for Lambda in LL:
         ax.set_xlabel(r'$\eta$', fontsize=16)
         ax.set_ylabel(r'$\theta$', fontsize=16)
         
-        fig.savefig('./figs/DNS_vs_characteristics_all_Lambda_' + str(np.round(Lambda, 2))
-                    + '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
-                    str(np.round(beta, 4)) + '_betas_' + str(np.round(betas, 4)) +
+        fig.savefig('./figs/DNS_vs_characteristics_all_Lambda_' + str(np.round(Lambda, 2)) +
+                    '_Lambdas_' + str(np.round(Lambdas, 2)) + '_beta_' +
+                    str(np.format_float_scientific(beta, precision=2)) +
+                    '_betas_' + str(np.format_float_scientific(betas, precision=2)) +
                     '_x0_' + str(np.round(x0, 2)) + '_eps_' + str(np.round(eps, 2)) +
                     '.pdf', bbox_inches='tight')
         plt.show()
